@@ -16,7 +16,7 @@
 		"symfony/console": "~2.3"
 	},
 	"autoload": {
-		"psr-0": {
+		"psr-4": {
 			"ADT\\OneSky": "src/"
 		}
 	}
