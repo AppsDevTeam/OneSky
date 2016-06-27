@@ -187,7 +187,7 @@ class OneSkyCommand extends Command
 			$this->oneSkyDir = static::tempnamDir(sys_get_temp_dir(), 'kdyby');	// temp dir
 		}
 
-		$this->oneSky = new \Onesky_Api();
+		$this->oneSky = new \ADT\OneSky\Onesky_Api();
 		$this->oneSky
 			->setApiKey($this->apiKey)
 			->setSecret($this->apiSecret);

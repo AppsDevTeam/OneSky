@@ -4,6 +4,8 @@
  * Onesky API wrapper PHP5 library
  */
 
+namespace ADT\OneSky;
+
 if (!function_exists('curl_init')) {
   throw new Exception('OneSky needs the CURL PHP extension.');
 }
