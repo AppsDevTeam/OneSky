@@ -17,7 +17,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"ADT\\": "src/"
+			"ADT\\OneSKy\\": "src/"
 		}
 	}
 }
