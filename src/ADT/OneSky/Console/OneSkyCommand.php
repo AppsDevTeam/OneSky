@@ -55,62 +55,10 @@ class OneSkyCommand extends Command
 	 */
 	protected $oneSky;
 
-
-
-
-
-
-	const ONESKY_DEFAULT_LANG = 'cs';
-
-	/**
-	 * @var Kdyby\Translation\Translator
-	 */
-	private $translator;
-
-	/**
-	 * @var \Kdyby\Translation\TranslationLoader
-	 */
-	private $loader;
-
-	/**
-	 * @var \Symfony\Component\Translation\Writer\TranslationWriter
-	 */
-	private $writer;
-
-	/**
-	 * @var \Symfony\Component\Translation\Extractor\ChainExtractor
-	 */
-	private $extractor;
-
 	/**
 	 * @var Nette\DI\Container
 	 */
 	private $serviceLocator;
-
-	/**
-	 * @var string
-	 */
-	private $outputFormat;
-
-	/**
-	 * @var array
-	 */
-	private $scanDirs;
-
-	/**
-	 * @var array
-	 */
-	private $excludedPrefixes;
-
-	/**
-	 * @var array
-	 */
-	private $excludePrefixFile;
-
-	/**
-	 * @var string
-	 */
-	private $outputDir;
 
 
 
@@ -183,10 +131,6 @@ class OneSkyCommand extends Command
 			return 1;
 		}
 
-		if ($input->getOption('download')) {
-			$this->oneSkyDir = static::tempnamDir(sys_get_temp_dir(), 'kdyby');	// temp dir
-		}
-
 		$this->oneSky = new \ADT\OneSky\Onesky_Api();
 		$this->oneSky
 			->setApiKey($this->apiKey)
@@ -248,101 +192,6 @@ class OneSkyCommand extends Command
 		}
 
 		return 0;
-	}
-
-	/**
-	 * Ze vstupního katalogu smaže překlady s klíči v $excludedPrefixes.
-	 * @param MessageCatalogue $catalogue
-	 * @param array $excludedPrefixes
-	 * @param boolean $onlyEmpty Smazat klíč pouze pokud je překlad prázdný?
-	 */
-	protected function excludePrefixes(MessageCatalogue &$catalogue, $excludedPrefixes, $onlyEmpty = TRUE) {
-
-		$outCatalogue = new MessageCatalogue($catalogue->getLocale());
-
-		foreach ($catalogue->all() as $domain => $messages) {
-			$outMessages = array();
-
-			foreach ($messages as $id => $translation) {
-
-				$include = TRUE;
-				foreach ($excludedPrefixes as $p) {
-					if (strpos($id, $p) === 0) {	// je to prefix
-						$include = FALSE;
-						break;
-					}
-				}
-				if (
-					$include
-					||
-					($onlyEmpty && ! empty($translation))
-				) {
-					$outMessages[$id] = $translation;
-				}
-
-			}
-
-			$outCatalogue->add($outMessages, $domain);
-		}
-
-		$catalogue = $outCatalogue;
-	}
-
-	/**
-	 * Ze vstupního katalogu smaže prázdné nebo neprázdné překlady.
-	 * @param MessageCatalogue $catalogue
-	 * @param boolean $empty Mají se mazat _prázdné_ překlady?
-	 */
-	protected function filterTranslations(MessageCatalogue &$catalogue, $empty = FALSE) {
-
-		$outCatalogue = new MessageCatalogue($catalogue->getLocale());
-
-		foreach ($catalogue->all() as $domain => $messages) {
-			$outMessages = array();
-
-			foreach ($messages as $id => $translation) {
-				if ($empty === empty($translation)) {
-					$outMessages[$id] = $translation;
-				}
-			}
-
-			$outCatalogue->add($outMessages, $domain);
-		}
-
-		$catalogue = $outCatalogue;
-	}
-
-
-	/**
-	 * Funguje podobně jako tempnam. Vytvoří složku s unikátním názvem.
-	 * @param string $dir
-	 * @param string $prefix
-	 * @return string|FALSE
-	 */
-	public static function tempnamDir($dir, $prefix) {
-		$tempfile = tempnam($dir, $prefix);
-
-		if (file_exists($tempfile))
-			unlink($tempfile);
-
-		mkdir($tempfile);
-
-		return $tempfile;
-	}
-
-	/**
-	 * Remove dir recursive
-	 */
-	public static function rmdir_r($dirName) {
-		if (is_dir($dirName)) {
-			foreach (glob($dirName . '/*') as $file) {
-				if (is_dir($file))
-					self::rmdir_r($file);
-				else
-					unlink($file);
-			}
-			rmdir($dirName);
-		}
 	}
 
 }
