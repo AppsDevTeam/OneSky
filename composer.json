@@ -1,0 +1,23 @@
+{
+	"name": "adt/onesky",
+	"type": "library",
+	"description": "Integration of OneSky API into Nette Framework",
+	"keywords": ["nette", "onesky", "translation"],
+	"homepage": "http://appsdevteam.com",
+	"authors": [
+		{
+			"name": "Apps Dev Team",
+			"homepage": "http://appsdevteam.com",
+			"email": "hello@appsdevteam.com"
+		}
+	],
+	"require": {
+		"nette/neon": "~2.3@dev",
+		"symfony/console": "~2.3"
+	},
+	"autoload": {
+		"psr-0": {
+			"ADT\\OneSky": "src/"
+		}
+	}
+}
