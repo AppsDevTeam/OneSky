@@ -24,7 +24,8 @@ class OneSkyCommand extends Command
 {
 
 	const LOCALE_ALL = 'all';
-
+	const WARNING = '-1';
+	
 	/**
 	 * @var string
 	 */
@@ -85,21 +86,21 @@ class OneSkyCommand extends Command
 	{
 
 		if (empty($this->apiKey)) {
-			$output->writeln('<error>Please specify OneSky apiKey.</error>');
+			$output->writeln('<comment>OneSky apiKey is not specified, skipped.</comment>');
 
-			return FALSE;
+			return self::WARNING;
 		}
 
 		if (empty($this->apiSecret)) {
-			$output->writeln('<error>Please specify OneSky apiSecret.</error>');
+			$output->writeln('<comment>OneSky apiSecret is not specified, skipped.</comment>');
 
-			return FALSE;
+			return self::WARNING;
 		}
 
 		if (empty($this->projectId)) {
-			$output->writeln('<error>Please specify OneSky projectId.</error>');
+			$output->writeln('<comment>OneSky projectId is not specified, skipped.</comment>');
 
-			return FALSE;
+			return self::WARNING;
 		}
 
 		if ($input->getOption('upload')) {
@@ -127,8 +128,14 @@ class OneSkyCommand extends Command
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		if ($this->validate($input, $output) !== TRUE) {
+		$validation = $this->validate($input, $output);
+
+		if ($validation === FALSE) {
 			return 1;
+		}
+
+		if ($validation === self::WARNING) {
+			return 0;
 		}
 
 		$this->oneSky = new \ADT\OneSky\Onesky_Api();
