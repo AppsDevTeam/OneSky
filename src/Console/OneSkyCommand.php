@@ -25,7 +25,7 @@ class OneSkyCommand extends Command
 
 	const LOCALE_ALL = 'all';
 	const WARNING = '-1';
-	
+
 	/**
 	 * @var string
 	 */
@@ -138,17 +138,20 @@ class OneSkyCommand extends Command
 			return 0;
 		}
 
-		$this->oneSky = new \ADT\OneSky\Onesky_Api();
+		$this->oneSky = new \OneSky\Api\Client();
 		$this->oneSky
 			->setApiKey($this->apiKey)
 			->setSecret($this->apiSecret);
 
 		if ($input->getOption('locale') === NULL || $input->getOption('locale') === static::LOCALE_ALL) {
+			$projects =  $this->oneSky->projects(
+				'languages',
+				['project_id' => $this->projectId,]
+			);
+
 			$this->locale = array_map(function($row){
 				return $row['locale'];
-			}, $this->oneSky->projects('languages', [
-				'project_id' => $this->projectId,
-			])['data']);
+			}, json_decode($projects, TRUE)['data']);
 
 		} else {
 			$this->locale = explode(',', $input->getOption('locale'));
@@ -159,6 +162,7 @@ class OneSkyCommand extends Command
 			$fileList = $this->oneSky->files('list', [
 				'project_id' => $this->projectId,
 			]);
+			$fileList = json_decode($fileList, TRUE);
 
 			foreach ($fileList['data'] as $file) {
 				$file = new \SplFileInfo($this->dir .'/'. $file['file_name']);
@@ -177,6 +181,7 @@ class OneSkyCommand extends Command
 						'file_format' => 'GNU_PO',
 						'locale' => $locale,
 					));
+					$response = json_decode($response, TRUE);
 					print_r($response);
 				}
 
