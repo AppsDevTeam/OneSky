@@ -138,7 +138,7 @@ class OneSkyCommand extends Command
 			return 0;
 		}
 
-		$this->oneSky = new \OneSky\Api\Client();
+		$this->oneSky = new \Onesky\Api\Client();
 		$this->oneSky
 			->setApiKey($this->apiKey)
 			->setSecret($this->apiSecret);
