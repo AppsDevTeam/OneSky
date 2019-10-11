@@ -3,7 +3,7 @@
 namespace ADT\OneSky\DI;
 
 use Nette;
-
+use Nette\DI\Extensions\InjectExtension;
 
 
 /**
@@ -28,7 +28,7 @@ class OneSkyExtension extends Nette\DI\CompilerExtension
 
 		$oneSkyCommand = $builder->addDefinition($this->prefix('onesky.command'))
 			->setClass('ADT\OneSky\Console\OneSkyCommand')
-			->setInject(FALSE)
+			->addTag(InjectExtension::TAG_INJECT, FALSE)
 			->addTag('kdyby.console.command');
 
 		foreach (array_keys($this->defaults) as $option) {
