@@ -33,7 +33,7 @@ class OneSkyExtension extends Nette\DI\CompilerExtension
 
 		foreach (array_keys($this->defaults) as $option) {
 			$oneSkyCommand
-				->addSetup('$'. $option, [$config[$option]]);
+				->addSetup('$'. $option, [$config[$option] ?? $this->defaults[$option]]);
 		}
 	}
 
