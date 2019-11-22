@@ -115,7 +115,8 @@ class OneSkyCommand extends Command
 			return FALSE;
 		}
 
-		if ($input->getOption('dir') && !is_dir($this->dir = $this->serviceLocator->expand($input->getOption('dir'))) || !is_writable($this->dir)) {
+		$dir = $this->dir = \Nette\DI\Helpers::expand($input->getOption('dir'), $this->serviceLocator->getParameters());
+		if ($input->getOption('dir') && !is_dir($dir) || !is_writable($this->dir)) {
 			$output->writeln(sprintf('<error>Given --dir "%s" does not exists or is not writable.</error>', $input->getOption('dir')));
 
 			return FALSE;
